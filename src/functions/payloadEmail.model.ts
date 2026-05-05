@@ -22,24 +22,45 @@ export interface PayloadStudent {
 
 
 export interface PayloadRecurrent {
-    workflowId : string;
-    cronRule   : string;
+    workflowId     : string;
+    cronRule       : string | null;
+    sendEmailLogId : string;
 }
 
+
 export interface Template {
-    id : string;
+    id      : string;
     content : string;
 }
+
+
+export type RecurrenceFrequency = 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY' | 'ONCE';
 
 
 export interface Workflow {
     id              : string;
     name            : string;
+    active          : boolean;
     students        : PayloadStudent[];
-    notificationId  : string;
-    subject         : string;
-    cc?             : string[] | null;
-    bcc?            : string[] | null;
-    status          : 'ACTIVE' | 'INACTIVE';
+    subject         : string | null;
+    cc              : string[];
+    bcc             : string[];
     template        : Template;
+    frequency       : RecurrenceFrequency;
+    hour            : number;
+    minute          : number;
+    daysOfWeek      : number[];
+    dayOfMonth      : number | null;
+    lastDayOfMonth  : boolean | null;
+    occurrences     : number | null;
+    repeatUntil     : string | null;
+    neverEnds       : boolean | null;
 }
+
+
+export interface PrepareExecutionResponse {
+    shouldStop     : boolean;
+    reason?        : string;
+    sendEmailLogId?: string;
+}
+
