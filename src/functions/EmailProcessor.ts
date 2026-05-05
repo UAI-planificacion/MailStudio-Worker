@@ -13,7 +13,9 @@ const options = {
   ttl: 1000 * 60 * 60, // Vida máxima de 1 hora (por si se edita el template)
 };
 
+
 export const templateCache = new LRUCache<string, string>( options );
+
 
 const resend = new Resend( ENVS.RESEND_API_KEY );
 
@@ -22,7 +24,7 @@ export async function EmailProcessor(
     message: PayloadEmail,
     context: InvocationContext
 ): Promise<void> {
-    context.log(`Procesando mensaje para la cola: ${JSON.stringify( message )}`);
+    context.log( `Procesando mensaje para la cola: ${JSON.stringify( message )}` );
 
     const {
         student,
