@@ -5,13 +5,14 @@ export enum Priority {
 
 
 export interface PayloadEmail {
-    student        : PayloadStudent;
-    templateId     : string;
-    subject        : string;
-    notificationId : string;
-    priority?      : Priority | null;
-    cc?            : string[] | null;
-    bcc?           : string[] | null;
+    student         : PayloadStudent;
+    templateId?     : string;
+    templateFileId? : string;
+    subject         : string;
+    notificationId  : string;
+    priority?       : Priority | null;
+    cc?             : string[] | null;
+    bcc?            : string[] | null;
 }
 
 
