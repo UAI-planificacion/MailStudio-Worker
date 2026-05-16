@@ -29,6 +29,7 @@ export async function EmailProcessor(
     const {
         student,
         templateId,
+        templateFileId,
         subject,
         cc,
         bcc,
@@ -36,14 +37,25 @@ export async function EmailProcessor(
         priority = Priority.NORMAL,
     } = message;
 
+    if ( !templateId && !templateFileId ) {
+        throw new Error( "Debe enviar templateId o templateFileId" );
+    }
+
+    if ( templateId && templateFileId ) {
+        throw new Error( "Debe enviar templateId o templateFileId, no ambos" );
+    }
+
     // 1. Intentar obtener de caché
-    let template = templateCache.get( templateId );
+    let template = templateCache.get( templateId || templateFileId );
+
+    const templateType = templateId ? 'template' : 'file';
+    const templateForUse = templateId || templateFileId;
 
     if ( !template ) {
-        context.log( `Cache miss para template ${templateId}. Buscando en API...` );
+        context.log( `Cache miss para template ${templateType}: ${templateForUse}. Buscando en API...` );
 
         const response = await apiRequest<string>({
-            endpoint: `${ENVS.MAIL_STUDIO.BACKEND_URL}/${ENVS.MAIL_STUDIO.TEMPLATE_ENDPOINT}/${templateId}`,
+            endpoint: `${ENVS.MAIL_STUDIO.BACKEND_URL}/${ENVS.MAIL_STUDIO.TEMPLATE_ENDPOINT}/${templateForUse}?type=${templateType}`,
         });
 
         if ( isApiError( response )) {
@@ -53,7 +65,7 @@ export async function EmailProcessor(
 
         template = response;
 
-        templateCache.set( templateId, template );
+        templateCache.set( templateForUse, template );
     }
 
     let finalHtml = template;
