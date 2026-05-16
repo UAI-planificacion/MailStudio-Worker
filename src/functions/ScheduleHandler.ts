@@ -167,9 +167,9 @@ export async function ScheduleHandler(
 }
 
 
-app.serviceBusQueue( ScheduleHandler.name, {
-    connection  : ENVS.QUEUE.CONNECTION,
-    queueName   : ENVS.QUEUE.SCHEDULE_NAME,
-    handler     : ScheduleHandler
-});
+// app.serviceBusQueue( ScheduleHandler.name, {
+//     connection  : ENVS.QUEUE.CONNECTION,
+//     queueName   : ENVS.QUEUE.SCHEDULE_NAME,
+//     handler     : ScheduleHandler
+// });
 
