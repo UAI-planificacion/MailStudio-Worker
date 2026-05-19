@@ -1,11 +1,12 @@
 import { app, InvocationContext } from "@azure/functions";
 
-import { Resend }   from 'resend';
-import { LRUCache } from 'lru-cache';
+import { Resend }                 from 'resend';
+import { LRUCache }               from 'lru-cache';
 
-import { ENVS }                     from "./envs";
-import { PayloadEmail, Priority }   from "./payloadEmail.model";
-import apiRequest, { isApiError }   from "./fetch.service";
+import { ENVS }                   from "./envs";
+import { PayloadEmail, Priority } from "./payloadEmail.model";
+import apiRequest, { isApiError } from "./fetch.service";
+import { processSignatures }      from "./signatureProcessor";
 
 // Configuración fuera del handler
 const options = {
@@ -68,15 +69,13 @@ export async function EmailProcessor(
         templateCache.set( templateForUse, template );
     }
 
-    let finalHtml = template;
+	let finalHtml = template;
 
-    if ( finalHtml.includes( ENVS.SIGNATURE_STUDENT_NAME! )) {
-        if ( !student.name ) {
-            context.log(`Warn: Alumno ${student.email} sin nombre completo para firma.`);
-        }
+	if ( !student.name ) {
+		context.log( `Warn: Alumno ${ student.email } sin nombre completo para firma.` );
+	}
 
-        finalHtml = finalHtml.replace( ENVS.SIGNATURE_STUDENT_NAME!, student.name ?? 'Estudiante' );
-    }
+	finalHtml = processSignatures( finalHtml, student );
 
     try {
         const { data: _data, error } = await resend.emails.send({
