@@ -1,28 +1,29 @@
 {
-  "name": "",
-  "version": "1.0.0",
-  "description": "",
-  "main": "dist/src/functions/*.js",
-  "scripts": {
-    "build": "tsc",
-    "watch": "tsc -w",
-    "clean": "rimraf dist",
-    "prestart": "npm run clean && npm run build",
-    "start": "func start",
-    "test": "echo \"No tests yet...\""
-  },
-  "dependencies": {
-    "@azure/functions": "^4.0.0",
-    "@azure/service-bus": "^7.9.5",
-    "cron-parser": "^5.5.0",
-    "lru-cache": "^11.3.5",
-    "resend": "^6.12.2"
-  },
-  "devDependencies": {
-    "@types/node": "18.x",
-    "@types/react": "^19.2.14",
-    "azure-functions-core-tools": "^4.x",
-    "rimraf": "^5.0.0",
-    "typescript": "^5.0.0"
-  }
+    "name": "mail-studio-worker",
+    "version": "1.0.0",
+    "description": "Worker de Azure Functions para el envío de correos a través de Resend",
+    "main": "dist/src/functions/*.js",
+    "scripts": {
+        "build": "tsc",
+        "watch": "tsc -w",
+        "clean": "rimraf dist",
+        "prestart": "npm run clean && npm run build",
+        "start": "func start",
+        "test": "echo \"No tests yet...\""
+    },
+    "dependencies": {
+        "@azure/functions": "^4.0.0",
+        "@azure/service-bus": "^7.9.5",
+        "@formkit/tempo": "^1.1.0",
+        "cron-parser": "^5.5.0",
+        "lru-cache": "^11.3.5",
+        "resend": "^6.12.2"
+    },
+    "devDependencies": {
+        "@types/node": "18.x",
+        "@types/react": "^19.2.14",
+        "azure-functions-core-tools": "^4.x",
+        "rimraf": "^5.0.0",
+        "typescript": "^5.0.0"
+    }
 }
