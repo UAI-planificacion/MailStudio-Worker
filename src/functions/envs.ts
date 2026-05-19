@@ -11,6 +11,11 @@ const requiredEnvs = [
     'MAIL_STUDIO_BACKEND_URL',
     'MAIL_STUDIO_TEMPLATE_ENDPOINT',
     'SIGNATURE_STUDENT_NAME',
+    'SIGNATURE_STUDENT_EMAIL',
+    'SIGNATURE_DATE_DAY',
+    'SIGNATURE_DATE_MONTH',
+    'SIGNATURE_DATE_YEAR',
+    'SIGNATURE_DATE_FULL',
     'ABUSE_TO'
 ];
 
@@ -24,6 +29,7 @@ for ( const envName of requiredEnvs ) {
 export const ENVS = {
     SERVICE_BUS_CONNECTION : envs.ServiceBusConnection!,
     RESEND_API_KEY           : envs.RESEND_API_KEY!,
+    ABUSE_TO                : envs.ABUSE_TO!,
     QUEUE                    : {
         CONNECTION           : envs.QUEUE_CONNECTION!,
         NAME                 : envs.QUEUE_NAME!,
@@ -35,6 +41,16 @@ export const ENVS = {
         FROM                : envs.MAIL_STUDIO_FROM!,
 
     },
-    SIGNATURE_STUDENT_NAME  : envs.SIGNATURE_STUDENT_NAME!,
-    ABUSE_TO                : envs.ABUSE_TO!,
+    SIGNATURE : {
+        STUDENT: {
+            NAME    : envs.SIGNATURE_STUDENT_NAME!,
+            EMAIL   : envs.SIGNATURE_STUDENT_EMAIL!,
+        },
+        DATE: {
+            DAY     : envs.SIGNATURE_DATE_DAY!,
+            MONTH   : envs.SIGNATURE_DATE_MONTH!,
+            YEAR    : envs.SIGNATURE_DATE_YEAR!,
+            FULL    : envs.SIGNATURE_DATE_FULL!,
+        }
+    },
 }
