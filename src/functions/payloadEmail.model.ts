@@ -17,8 +17,9 @@ export interface PayloadEmail {
 
 
 export interface PayloadStudent {
-    email   : string;
-    name?   : string | null;
+    email       : string;
+    name?       : string | null;
+    customData? : Record<string, string> | null;
 }
 
 
