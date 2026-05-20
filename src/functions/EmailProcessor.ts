@@ -6,7 +6,9 @@ import { LRUCache }               from 'lru-cache';
 import { ENVS }                   from "./envs";
 import { PayloadEmail, Priority } from "./payloadEmail.model";
 import apiRequest, { isApiError } from "./fetch.service";
-import { processSignatures }      from "./signatureProcessor";
+import { processSignatures }       from "./signatureProcessor";
+import { processCustomSignatures } from "./signatureCustom";
+
 
 // Configuración fuera del handler
 const options = {
@@ -76,6 +78,7 @@ export async function EmailProcessor(
 	}
 
 	finalHtml = processSignatures( finalHtml, student );
+	finalHtml = processCustomSignatures( finalHtml, student );
 
     try {
         const { data: _data, error } = await resend.emails.send({
