@@ -1,13 +1,13 @@
 import { app, InvocationContext } from "@azure/functions";
 
-import { Resend }                 from 'resend';
-import { LRUCache }               from 'lru-cache';
+import { Resend }   from 'resend';
+import { LRUCache } from 'lru-cache';
 
-import { ENVS }                   from "./envs";
-import { PayloadEmail, Priority } from "./payloadEmail.model";
-import apiRequest, { isApiError } from "./fetch.service";
-import { processSignatures }       from "./signatureProcessor";
-import { processCustomSignatures } from "./signatureCustom";
+import { ENVS }                     from "./envs";
+import { PayloadEmail, Priority }   from "./payloadEmail.model";
+import apiRequest, { isApiError }   from "./fetch.service";
+import { processSignatures }        from "./signatureProcessor";
+import { processCustomSignatures }  from "./signatureCustom";
 
 
 // Configuración fuera del handler
