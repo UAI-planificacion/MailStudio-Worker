@@ -47,7 +47,8 @@ export interface Workflow {
     subject         : string | null;
     cc              : string[];
     bcc             : string[];
-    template        : Template;
+    template?       : Template;
+    templateFileId? : string;
     frequency       : RecurrenceFrequency;
     hour            : number;
     minute          : number;
