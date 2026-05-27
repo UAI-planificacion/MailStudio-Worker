@@ -24,27 +24,29 @@ export async function ScheduleHandler(
     context.log( `⏰ Iniciando proceso para Workflow ID: ${ workflowId } | SendEmailLog: ${ sendEmailLogId }` );
 
     try {
-        const backendUrl: string = ENVS.MAIL_STUDIO.BACKEND_URL;
+        const backendUrl        = ENVS.MAIL_STUDIO.BACKEND_URL;
+        const workflowEndpoint  = ENVS.MAIL_STUDIO.WORKFLOW_ENDPOINT;
+        const workflowUrl       = `${ backendUrl }/${workflowEndpoint}/${ workflowId }`;
 
         // Notificar estado PROCESSING al backend de forma asíncrona (fire-and-forget)
-        apiRequest( {
+        apiRequest({
             endpoint : `${ backendUrl }/send-email-logs/${ sendEmailLogId }/status`,
             method   : METHOD.PATCH,
             body     : {
                 status : "PROCESSING",
             },
-        } ).catch( ( err: any ) => {
+        }).catch( ( err: any ) => {
             context.log( `⚠️ No se pudo actualizar estado a PROCESSING: ${ err.message }` );
-        } );
+        });
 
         // 1. Obtener datos completos del Workflow
-        context.log( `🔗 Solicitando datos al backend: ${ backendUrl }/workflow/${ workflowId }` );
+        context.log( `🔗 Solicitando datos al backend: ${ workflowUrl }` );
 
         let workflow: Workflow;
 
         try {
-            const response = await apiRequest<Workflow>( {
-                endpoint : `${ backendUrl }/workflow/${ workflowId }`,
+            const response = await apiRequest<Workflow>({
+                endpoint : workflowUrl,
             });
 
             if ( isApiError( response )) {
@@ -59,12 +61,13 @@ export async function ScheduleHandler(
         // 2. Verificar que el workflow siga activo
         if ( !workflow.active ) {
             context.log( `🛑 Workflow ${ workflowId } desactivado por el admin. Terminando ciclo.` );
+
             return;
         }
 
         const { students, template, templateFileId, subject, cc, bcc } = workflow;
 
-        if ( !students || !Array.isArray( students ) ) {
+        if ( !students || !Array.isArray( students )) {
             throw new Error( "El backend no devolvió una lista de estudiantes válida." );
         }
 
@@ -118,9 +121,9 @@ export async function ScheduleHandler(
             body     : {
                 status : "COMPLETED",
             },
-        } ).catch( ( err: any ) => {
+        }).catch( ( err: any ) => {
             context.log( `⚠️ No se pudo actualizar estado a COMPLETED: ${ err.message }` );
-        } );
+        });
 
         // 4. Determinar si debe re-programarse
         const isOnce: boolean = workflow.frequency === 'ONCE';
@@ -199,7 +202,6 @@ export async function ScheduleHandler(
 
         await recurrenceSender.close();
         context.log( `📅 Próxima ejecución programada para: ${ nextRun.toISOString() }` );
-
     } catch ( error: any ) {
         context.log( `❌ ERROR CRÍTICO en ScheduleHandler: ${ error.message }` );
 
@@ -211,9 +213,9 @@ export async function ScheduleHandler(
                 status  : "FAILED",
                 message : error.message,
             },
-        } ).catch( ( err: any ) => {
+        }).catch( ( err: any ) => {
             context.log( `⚠️ No se pudo actualizar estado a FAILED: ${ err.message }` );
-        } );
+        });
 
         throw error;
     }
