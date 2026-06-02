@@ -1,7 +1,7 @@
 import { app, InvocationContext }               from "@azure/functions";
 import { ServiceBusClient, ServiceBusSender }   from "@azure/service-bus";
 
-import * as cronParser from 'cron-parser';
+import { CronExpressionParser } from 'cron-parser';
 
 import {
     PayloadRecurrent,
@@ -181,8 +181,8 @@ export async function ScheduleHandler(
                 nextRun = new Date( targetYear, targetMonth, nextLastDay, workflow.hour, workflow.minute, 0, 0 );
             }
         } else if ( cronRule ) {
-            const interval: any = ( cronParser as any ).parseExpression( cronRule );
-            nextRun             = interval.next().toDate();
+            const interval = CronExpressionParser.parse( cronRule );
+            nextRun        = interval.next().toDate();
         } else {
             context.log( `❌ No se puede calcular la próxima ejecución: sin cronRule ni lastDayOfMonth.` );
             return;
@@ -226,4 +226,4 @@ app.serviceBusQueue( ScheduleHandler.name, {
     connection : ENVS.QUEUE.CONNECTION,
     queueName  : ENVS.QUEUE.SCHEDULE_NAME,
     handler    : ScheduleHandler
-} );
+});
